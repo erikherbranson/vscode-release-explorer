@@ -1,0 +1,3 @@
+[submodule "vscode-release-explorer-core"]
+	path = vscode-release-explorer-core
+	url = git@github.com:erikherbranson/vscode-release-explorer-core.git
