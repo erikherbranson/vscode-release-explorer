@@ -11,16 +11,43 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:vscode-release-explorer.helloWorld"
+    "onView:releaseExplorer.views.dependencies"
   ],
   "main": "./dist/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "vscode-release-explorer.helloWorld",
-        "title": "Hello World"
+        "command": "releaseExplorer.commands.syncSpin",
+        "title": "refresh",
+        "icon": "$(sync~spin)"
       }
-    ]
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "releaseExplorer",
+          "title": "Release Explorer",
+          "icon": "$(versions)"
+        }
+      ]
+    },
+    "views": {
+      "releaseExplorer": [
+        {
+          "id": "releaseExplorer.views.dependencies",
+          "name": "Releases"
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "releaseExplorer.commands.syncSpin",
+          "when": "view == releaseExplorer.views.dependencies && releaseExplorer.status.isSyncing == true",
+          "group": "navigation"
+        }
+      ]
+    }
   },
   "scripts": {
     "commit": "cz",
@@ -38,6 +65,7 @@
     "@types/glob": "^7.2.0",
     "@types/mocha": "^9.1.0",
     "@types/node": "14.x",
+    "@types/node-cron": "^3.0.1",
     "@types/vscode": "^1.65.0",
     "@typescript-eslint/eslint-plugin": "^5.12.1",
     "@typescript-eslint/parser": "^5.12.1",
