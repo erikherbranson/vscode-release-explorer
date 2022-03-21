@@ -1,7 +1,6 @@
 import * as vscode from "vscode";
 
-import { PackageReleasesProvider } from "../vscode-release-explorer-core/src/PackageReleasesProvider";
-import { RssBot } from "../vscode-release-explorer-core/src/RssBot";
+import { PackageReleasesProvider, RssBot, makeCommands } from "../vscode-release-explorer-core/src";
 
 let rssBot: RssBot | null;
 
@@ -13,29 +12,28 @@ export function activate(context: vscode.ExtensionContext) {
 
   const provider = new PackageReleasesProvider(rootPath, context);
 
+  const commands = makeCommands([provider], context);
+
   rssBot = new RssBot([provider], context);
-  rssBot.startAll();
 
-  const treeDataProviderDisposable = vscode.window.registerTreeDataProvider(
-    "releaseExplorer.views.dependencies",
-    provider
+  context.subscriptions.push(
+    vscode.window.registerTreeDataProvider("releaseExplorer.views.dependencies", provider)
   );
-  context.subscriptions.push(treeDataProviderDisposable);
 
-  const openLinkDisposable = vscode.commands.registerCommand(
-    "releaseExplorer.commands.openLink",
-    (link: string) => vscode.commands.executeCommand("vscode.open", vscode.Uri.parse(link))
+  context.subscriptions.push(
+    vscode.commands.registerCommand("releaseExplorer.commands.openLink", commands.openLink)
   );
-  context.subscriptions.push(openLinkDisposable);
 
-  const syncSpinDisposable = vscode.commands.registerCommand(
-    "releaseExplorer.commands.syncSpin",
-    () => {}
+  context.subscriptions.push(
+    vscode.commands.registerCommand("releaseExplorer.commands.syncSpin", commands.syncSpin)
   );
-  context.subscriptions.push(syncSpinDisposable);
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand("releaseExplorer.commands.delete", commands.deleteTreeItem)
+  );
 }
 
 export function deactivate() {
-  rssBot?.stopAll();
+  rssBot?.cleanUp();
   rssBot = null;
 }

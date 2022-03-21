@@ -18,8 +18,13 @@
     "commands": [
       {
         "command": "releaseExplorer.commands.syncSpin",
-        "title": "refresh",
+        "title": "Checking RSS feeds",
         "icon": "$(sync~spin)"
+      },
+      {
+        "command": "releaseExplorer.commands.delete",
+        "title": "Delete",
+        "icon": "$(close)"
       }
     ],
     "viewsContainers": {
@@ -45,6 +50,13 @@
           "command": "releaseExplorer.commands.syncSpin",
           "when": "view == releaseExplorer.views.dependencies && releaseExplorer.status.isSyncing == true",
           "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "releaseExplorer.commands.delete",
+          "when": "view == releaseExplorer.views.dependencies && viewItem == release",
+          "group": "inline"
         }
       ]
     }
